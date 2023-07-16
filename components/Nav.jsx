@@ -51,7 +51,7 @@ const Nav = () => {
           </div>
         ) : (
           <>
-            {
+            {providers &&
               Object.values(providers).map((provider) => (
                 <button
                   type="button"
