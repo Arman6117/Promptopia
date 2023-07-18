@@ -36,7 +36,7 @@ const Feed = () => {
     };
     fetchPosts()
 
-  })
+  },[posts])
   return (
     <section className="feed">
       <form className="relative w-full flex justify-center">
