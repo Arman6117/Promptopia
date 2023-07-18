@@ -20,7 +20,11 @@ const Feed = () => {
   }
   const fetchPosts = async () => {
     try {
-      const response = await fetch('/api/prompt');
+      const response = await fetch('/api/prompt', {
+        headers: {
+          'Cache-Control': 'no-cache',
+        },
+      });
       if (!response.ok) {
         throw new Error('Failed to fetch posts');
       }
