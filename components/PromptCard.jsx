@@ -1,12 +1,14 @@
 "use client";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
+
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@utils/firebase";
 
 const PromptCard = ({ prompt, handleTagClick, handleEdit, handleDelete }) => {
   const [copied, setCopied] = useState("");
-  const {data:session} = useSession()
+  const [user] = useAuthState(auth)
   const pathName = usePathname()
   const router  = useRouter()
   const handelCopy = () => {
@@ -57,7 +59,7 @@ const PromptCard = ({ prompt, handleTagClick, handleEdit, handleDelete }) => {
         >
           #{prompt.tag}
         </p>
-        {session?.user.id === prompt.creator._id && pathName === "/profile" && (
+        {user?.uid === prompt.creator._id && pathName === "/profile" && (
           <div className="mt-5 flex justify-center gap-3 border-t border-gray-100 cursor-pointer">
             <p
               className="font-inter text-sm green_gradient cursor-pointer"

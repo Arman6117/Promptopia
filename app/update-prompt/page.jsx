@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Form from "@components/Form";
@@ -15,21 +15,28 @@ const EditPrompt = () => {
 
   useEffect(() => {
     const getPromptDetails = async () => {
-      const response = await fetch(`/api/prompt/${promptId}`);
-      const data = await response.json();
-      setPost({
-        prompt: data.prompt,
-        tag: data.tag,
-      });
+      try {
+        const response = await fetch(`/api/prompt/${promptId}`);
+        const data = await response.json();
+        setPost({
+          prompt: data.prompt,
+          tag: data.tag,
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
     };
-    if (promptId) getPromptDetails();
+
+    // Fetch prompt details only if promptId is present
+    if (promptId) {
+      getPromptDetails();
+    }
   }, [promptId]);
 
   const UpdatePrompt = async (e) => {
     e.preventDefault();
-    
-    if(!promptId) return alert("Prompt Id not found")
-    setSubmitting(true); //*Using as a loader
+
+    setSubmitting(true); // Using as a loader
 
     try {
       const response = await fetch(`/api/prompt/${promptId}`, {
@@ -39,6 +46,7 @@ const EditPrompt = () => {
           tag: post.tag,
         }),
       });
+
       if (response.ok) {
         router.push("/");
       }
@@ -48,6 +56,7 @@ const EditPrompt = () => {
       setSubmitting(false);
     }
   };
+
   return (
     <>
       <Form
@@ -55,7 +64,7 @@ const EditPrompt = () => {
         post={post}
         setPost={setPost}
         submitting={submitting}
-        handelSubmit={UpdatePrompt}
+        handleSubmit={UpdatePrompt} // Fix typo: handelSubmit -> handleSubmit
       />
     </>
   );

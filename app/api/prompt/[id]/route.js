@@ -1,55 +1,60 @@
-import { connectToDB } from "@utils/database";
-import Prompt from "@models/prompt";
+import { db } from "@utils/firebase";
+import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 
 
 //!GET
 export const GET = async (request, { params }) => {
   try {
-    await connectToDB();
+    const promptDoc = await getDoc(doc(db, 'prompts', params.id));
 
-    const prompt = await Prompt.findById(params.id).populate("creator");
-    if (!prompt) return new Response("Prompt not found", { status: 404 });
+    if (!promptDoc.exists()) {
+      return new Response('Prompt not found', { status: 404 });
+    }
+
+    const prompt = { id: promptDoc.id, ...promptDoc.data() };
 
     return new Response(JSON.stringify(prompt), { status: 200 });
   } catch (error) {
-    return new Response("Failed to fetch the prompts", { status: 500 });
+    return new Response('Failed to fetch the prompts', { status: 500 });
   }
 };
-
 
 //!PATCH
 export const PATCH = async (request, { params }) => {
   const { prompt, tag } = await request.json();
 
   try {
-    await connectToDB();
+    const promptRef = doc(db, 'prompts', params.id);
+    const promptDoc = await getDoc(promptRef);
 
-    const existingPrompt = await Prompt.findById(params.id);
+    if (!promptDoc.exists()) {
+      return new Response('Prompt not found', { status: 404 });
+    }
 
-    if (!existingPrompt)
-      return new Response("Prompt not found", { status: 404 });
+    await updateDoc(promptRef, { prompt, tag });
 
-    existingPrompt.prompt = prompt;
-    existingPrompt.tag = tag;
+    const updatedPrompt = { id: params.id, prompt, tag };
 
-    await existingPrompt.save();
-
-    return new Response(JSON.stringify(existingPrompt), { status: 200 });
+    return new Response(JSON.stringify(updatedPrompt), { status: 200 });
   } catch (error) {
-    return new Response("Failed to update the prompt", { status: 500 });
+    return new Response('Failed to update the prompt', { status: 500 });
   }
 };
-
 
 //!DELETE
 export const DELETE = async (request, { params }) => {
   try {
-    await connectToDB();
+    const promptRef = doc(db, 'prompts', params.id);
+    const promptDoc = await getDoc(promptRef);
 
-    await Prompt.findByIdAndRemove(params.id);
+    if (!promptDoc.exists()) {
+      return new Response('Prompt not found', { status: 404 });
+    }
 
-    return new Response("Prompt deleted successfully", { status: 200 });
+    await deleteDoc(promptRef);
+
+    return new Response('Prompt deleted successfully', { status: 200 });
   } catch (error) {
-    return new Response("Failed to delete the prompt", { status: 500 });
+    return new Response('Failed to delete the prompt', { status: 500 });
   }
 };

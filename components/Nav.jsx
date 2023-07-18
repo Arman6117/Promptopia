@@ -1,23 +1,49 @@
-"use client";
-
+'use client'
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, provider, db } from "@utils/firebase";
+import { signInWithPopup } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+
 const Nav = () => {
-  const {data:session} = useSession()
-  const [providers, setProvider] = useState(null);
   const [toggleDropDown, setToggleDropDown] = useState(false);
+  const [user] = useAuthState(auth);
 
   useEffect(() => {
-    const setProviders = async () => {
-      const response = await getProviders();
-      setProvider(response);
+    const saveUserToFirestore = async () => {
+      if (user) {
+        const userDocRef = doc(db, "users", user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (!userDocSnap.exists()) {
+          // User document doesn't exist, save the user's information
+          const userData = {
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+          };
+          await setDoc(userDocRef, userData);
+        }
+      }
     };
-    setProviders();
-  }, []);
+
+    saveUserToFirestore();
+  }, [user]);
+
+  const signIn = async (e) => {
+    e.preventDefault();
+
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <nav className=" flex justify-between w-full mb-16 pt-3">
+    <nav className="flex justify-between w-full mb-16 pt-3">
       <Link href="/" className="flex gap-2 items-center">
         <Image
           src="./assets/images/logo.svg"
@@ -31,17 +57,25 @@ const Nav = () => {
 
       {/* Desktop Navigation */}
       <div className="sm:flex hidden">
-        {session?.user ? (
+        {!user ? (
+          <button type="button" className="black_btn" onClick={signIn}>
+            Sign In
+          </button>
+        ) : (
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">
               Create Post
             </Link>
-            <button type="button" className="outline_btn" onClick={signOut}>
+            <button
+              type="button"
+              className="outline_btn"
+              onClick={() => auth.signOut()}
+            >
               Sign Out
             </button>
             <Link href="/profile">
               <Image
-                  src={session?.user.image}
+                src={user.photoURL}
                 width={37}
                 height={37}
                 className="rounded-full"
@@ -49,35 +83,24 @@ const Nav = () => {
               />
             </Link>
           </div>
-        ) : (
-          <>
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  type="button"
-                  className="black_btn"
-                  key={provider.name}
-                  onClick={() => signIn(provider.id)}
-                >
-                  Sign In
-                </button>
-              ))}
-          </>
         )}
       </div>
 
       {/* Mobile Navigation */}
-
       <div className="sm:hidden flex relative">
-        {session?.user ? (
+        {!user ? (
+          <button type="button" className="black_btn" onClick={signIn}>
+            Sign In
+          </button>
+        ) : (
           <div className="flex">
             <Image
-              src={session?.user.image}
+              src={user.photoURL}
               width={37}
               height={37}
               className="rounded-full"
               alt="profile"
-              onClick={() => setToggleDropDown(() => (prev) => !prev)}
+              onClick={() => setToggleDropDown((prev) => !prev)}
             />
             {toggleDropDown && (
               <div className="dropdown">
@@ -103,7 +126,7 @@ const Nav = () => {
                   className="black_btn mt-5 w-full"
                   onClick={() => {
                     setToggleDropDown(false);
-                    signOut();
+                    auth.signOut();
                   }}
                 >
                   Sign Out
@@ -111,20 +134,6 @@ const Nav = () => {
               </div>
             )}
           </div>
-        ) : (
-          <>
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  type="button"
-                  className="black_btn"
-                  key={provider.name}
-                  onClick={() => signIn(provider.id)}
-                >
-                  Sign In
-                </button>
-              ))}
-          </>
         )}
       </div>
     </nav>

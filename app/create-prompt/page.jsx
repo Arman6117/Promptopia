@@ -1,12 +1,14 @@
 "use client";
 import React, { useState } from "react";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Form from "@components/Form";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@utils/firebase";
 
 const createPrompt = () => {
   const router = useRouter();
-  const {data: session} = useSession()
+  const [user] = useAuthState(auth)
   const [submitting, setSubmitting] = useState(false);
   const [post, setPost] = useState({
     prompt: "",
@@ -23,7 +25,7 @@ const createPrompt = () => {
         method: "POST",
         body: JSON.stringify({
           prompt: post.prompt,
-          userId: session?.user.id,
+          userId: user?.uid,
           tag: post.tag,
         }),
         
