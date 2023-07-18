@@ -22,7 +22,7 @@ const MyProfile = () => {
     };
 
     fetchPosts();
-  },[user?.uid]);
+  },[user]);
   console.log(posts);
   // Handle edit action for a prompt
   const handleEdit = async (prompt) => {
