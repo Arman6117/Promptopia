@@ -27,6 +27,9 @@ const createPrompt = () => {
           prompt: post.prompt,
           userId: user?.uid,
           tag: post.tag,
+          image:user.photoURL,
+          userName:user.displayName,
+          email:user.email
         }),
         
       });
@@ -46,7 +49,7 @@ const createPrompt = () => {
         post={post}
         setPost={setPost}
         submitting={submitting}
-        handelSubmit={createPrompt}
+        handleSubmit={createPrompt}
       />
     </>
   );

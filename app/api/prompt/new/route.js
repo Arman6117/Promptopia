@@ -2,7 +2,7 @@ import { db } from "@utils/firebase";
 import { addDoc, collection, getDoc, doc } from "firebase/firestore";
 
 export const POST = async (req) => {
-  const { userId, prompt, tag } = await req.json(); // Getting all the data from the request body
+  const { userId, prompt, tag, image, userName, email } = await req.json(); // Getting all the data from the request body
 
   try {
     // Fetch additional user information from Firestore
@@ -12,16 +12,16 @@ export const POST = async (req) => {
     }
     const userData = userDoc.data();
 
+    // console.log(userData);
     // Create new prompt object with user information
     const newPrompt = {
-      creator: {
-        userId,
-        username: userData.username,
-        email: userData.email,
-        image: userData.image,
-      },
+      creator: userId,
+
       tag,
       prompt,
+      image,
+      userName,
+      email,
     };
 
     const docRef = await addDoc(collection(db, "prompts"), newPrompt);

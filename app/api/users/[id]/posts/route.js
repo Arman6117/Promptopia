@@ -1,5 +1,5 @@
 import { db } from "@utils/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 
 export const GET = async (request, { params }) => {
