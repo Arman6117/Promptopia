@@ -1,5 +1,5 @@
 import { db } from "@utils/firebase";
-import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 
 
 //!GET
