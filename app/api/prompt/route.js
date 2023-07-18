@@ -11,6 +11,7 @@ export const GET = async (req, res) => {
     promptsSnapshot.forEach((doc) => {
       prompts.push({ id: doc.id, ...doc.data() });
     });
+    // console.log();
 
     return new Response(JSON.stringify(prompts), { status: 200 });
   } catch (error) {

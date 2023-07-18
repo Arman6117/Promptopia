@@ -19,27 +19,24 @@ const Feed = () => {
 
   }
 
-  useEffect(() => {
+  useEffect(()=>{
     const fetchPosts = async () => {
       try {
-        const timestamp = Date.now();
-        const url = `/api/prompt?timestamp=${timestamp}`;
-        const response = await fetch(url);
-  
+        const response = await fetch('/api/prompt');
         if (!response.ok) {
           throw new Error('Failed to fetch posts');
         }
-  
         const data = await response.json();
+        // console.log(data);
         setPosts(data);
       } catch (error) {
         console.log(error);
         // Handle error state or display an error message to the user
       }
     };
-  
-    fetchPosts();
-  }, []);
+    fetchPosts()
+
+  },[])
   return (
     <section className="feed">
       <form className="relative w-full flex justify-center">
