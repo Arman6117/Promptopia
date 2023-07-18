@@ -53,7 +53,12 @@ export const DELETE = async (request, { params }) => {
 
     await deleteDoc(promptRef);
 
-    return new Response('Prompt deleted successfully', { status: 200 });
+    // Fetch the updated list of prompts after deleting
+    const promptsRef = collection(db, 'prompts');
+    const snapshot = await getDocs(promptsRef);
+    const updatedPrompts = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+
+    return new Response(JSON.stringify(updatedPrompts), { status: 200 });
   } catch (error) {
     return new Response('Failed to delete the prompt', { status: 500 });
   }
