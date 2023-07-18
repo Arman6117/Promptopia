@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Profile from "@components/Profile";
@@ -23,16 +23,17 @@ const MyProfile = () => {
 
     fetchPosts();
   }, []);
- console.log(posts);
+  console.log(posts);
   // Handle edit action for a prompt
   const handleEdit = async (prompt) => {
     router.push(`/update-prompt?id=${prompt.id}`);
-    
   };
 
   // Handle delete action for a prompt
   const handleDelete = async (prompt) => {
-    const hasConfirmed = confirm("Are you sure you want to delete this prompt?");
+    const hasConfirmed = confirm(
+      "Are you sure you want to delete this prompt?"
+    );
     if (hasConfirmed) {
       try {
         await fetch(`/api/prompt/${prompt.id}`, {
@@ -40,7 +41,8 @@ const MyProfile = () => {
         });
         // Remove the deleted prompt from the posts array
         const filteredPosts = posts.filter((p) => p.id !== prompt.id);
-        console.log(prompt.id);
+        // console.log(prompt.id);
+        console.log(filteredPosts);
         setPosts(filteredPosts);
       } catch (error) {
         console.log(error);
