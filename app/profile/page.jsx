@@ -22,7 +22,7 @@ const MyProfile = () => {
     };
 
     fetchPosts();
-  }, [user]);
+  }, []);
  console.log(posts);
   // Handle edit action for a prompt
   const handleEdit = async (prompt) => {
@@ -40,6 +40,7 @@ const MyProfile = () => {
         });
         // Remove the deleted prompt from the posts array
         const filteredPosts = posts.filter((p) => p.id !== prompt.id);
+        console.log(prompt.id);
         setPosts(filteredPosts);
       } catch (error) {
         console.log(error);
