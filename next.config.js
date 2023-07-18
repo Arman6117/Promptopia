@@ -1,6 +1,7 @@
 // @ts-check
 
 const nextConfig = {
+  output:'export',
   experimental: {
     appDir: true,
     serverComponentsExternalPackages: ["mongoose"],
