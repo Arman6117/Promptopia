@@ -21,6 +21,7 @@ const Feed = () => {
   const fetchPosts = async () => {
     try {
       const response = await fetch('/api/prompt', {
+        method:'GET',
         headers: {
           'Cache-Control': 'no-cache',
         },

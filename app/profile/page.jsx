@@ -17,7 +17,7 @@ const MyProfile = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch(`/api/users/${user?.uid}/posts`);
+        const response = await fetch(`/api/users/${user?.uid}/posts`,{method:'GET'});
         const data = await response.json();
         setPosts(data);
       } catch (error) {
@@ -27,7 +27,7 @@ const MyProfile = () => {
 
     fetchPosts();
   },[user]);
-  console.log(posts);
+  // console.log(posts);
   // Handle edit action for a prompt
   const handleEdit = async (prompt) => {
     router.push(`/update-prompt?id=${prompt.id}`);
