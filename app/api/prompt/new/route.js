@@ -1,6 +1,10 @@
-import { db } from "@utils/firebase";
+import { firebaseConfig } from "@utils/firebase";
 import { addDoc, collection, getDoc, doc } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import {getFirestore} from 'firebase/firestore'
 
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app)
 export const POST = async (req) => {
   const { userId, prompt, tag, image, userName, email } = await req.json(); // Getting all the data from the request body
 

@@ -4,11 +4,15 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Form from "@components/Form";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@utils/firebase";
+import { firebaseConfig } from "@utils/firebase";
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 const createPrompt = () => {
   const router = useRouter();
-  const [user] = useAuthState(auth)
+  const [user] = useAuthState(auth);
   const [submitting, setSubmitting] = useState(false);
   const [post, setPost] = useState({
     prompt: "",
@@ -27,19 +31,18 @@ const createPrompt = () => {
           prompt: post.prompt,
           userId: user?.uid,
           tag: post.tag,
-          image:user.photoURL,
-          userName:user.displayName,
-          email:user.email
+          image: user.photoURL,
+          userName: user.displayName,
+          email: user.email,
         }),
-        
       });
-      if(response.ok){
-        router.push('/')
+      if (response.ok) {
+        router.push("/");
       }
     } catch (error) {
       console.log(error.message);
-    }finally{
-      setSubmitting(false)
+    } finally {
+      setSubmitting(false);
     }
   };
   return (

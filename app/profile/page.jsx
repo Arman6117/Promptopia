@@ -3,7 +3,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Profile from "@components/Profile";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@utils/firebase";
+import { firebaseConfig } from "@utils/firebase";
+import { initializeApp } from "firebase/app";
+import {getAuth} from 'firebase/auth'
+const app = initializeApp(firebaseConfig)
+const auth  = getAuth(app)
 
 const MyProfile = () => {
   const [posts, setPosts] = useState([]);

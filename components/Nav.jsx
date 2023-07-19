@@ -3,9 +3,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, provider, db } from "@utils/firebase";
-import { signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { firebaseConfig } from "@utils/firebase";
+import { initializeApp } from "firebase/app";
+import {getAuth} from 'firebase/auth'
+const app = initializeApp(firebaseConfig)
+const auth  = getAuth(app)
+const provider = new GoogleAuthProvider()
 
 const Nav = () => {
   const [toggleDropDown, setToggleDropDown] = useState(false);

@@ -1,6 +1,9 @@
-import { db } from "@utils/firebase";
+import { firebaseConfig } from "@utils/firebase";
 import { collection, getDocs } from "firebase/firestore";
-
+import { initializeApp } from "firebase/app";
+import {getFirestore} from 'firebase/firestore'
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app)
 
 export const GET = async (req, res) => {
   try {

@@ -4,7 +4,11 @@ import { useState } from "react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@utils/firebase";
+import { firebaseConfig } from "@utils/firebase";
+import { initializeApp } from "firebase/app";
+import {getAuth} from 'firebase/auth'
+const app = initializeApp(firebaseConfig)
+const auth  = getAuth(app)
 
 const PromptCard = ({ prompt, handleTagClick, handleEdit, handleDelete }) => {
   const [copied, setCopied] = useState("");
